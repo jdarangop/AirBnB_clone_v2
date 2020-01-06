@@ -1,10 +1,11 @@
 #!/usr/bin/python3
 """ Module Pack Web Static """
-from fabric.api import local, env, put, cd
+from fabric.api import local, env, put, cd, run
 import datetime
 import os
 
 env.hosts = ["35.243.168.55", "34.74.7.41"]
+
 
 def do_pack():
     """ Do pack """
@@ -19,24 +20,24 @@ def do_pack():
     if fail.failed:
         return False
 
+
 def do_deploy(archive_path):
     """ Do deploy """
 
-    if not os.path.isfile(archive_path):
+    if not os.path.exists(archive_path):
         return False
 
-    #put(archive_path, "/tmp/")
-    put_ver = put(archive_path, "/tmp")
-    if pur_ver.failed:
+    put_ver = put(local_path=archive_path, remote_path="/tmp/")
+    if put_ver.failed:
         return False
     name_file = archive_path.split("/")[1].split(".")[0]
-    with cd("/tmp/"):
-        run("mkdir /data/web_static/releases/{}".format(name_file))
+    run("mkdir -p /data/web_static/releases/{}".format(name_file))
     uncomp_ver = run("tar zxvf /tmp/{}.tgz -C \
-                      /data/web_static/releases/{}".format(name_file, name_file))
+                      /data/web_static/releases/{}".format(
+                     name_file, name_file))
     if uncomp_ver.failed:
         return False
-    rm_ver = run("rm /data/web_static/releases/{}.tgz".format(name_file))
+    #rm_ver = run("rm /data/web_static/releases/{}.tgz".format(name_file))
     rm_ver = run("rm /tmp/{}.tgz".format(name_file))
     if rm_ver.failed:
         return False

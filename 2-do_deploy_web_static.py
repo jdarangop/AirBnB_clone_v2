@@ -4,6 +4,7 @@ from fabric.api import local, env, put, cd
 import datetime
 import os
 
+env.hosts = ["35.243.168.55", "34.74.7.41"]
 
 def do_pack():
     """ Do pack """
@@ -21,19 +22,22 @@ def do_pack():
 def do_deploy(archive_path):
     """ Do deploy """
 
-    env.hosts = ["35.243.168.55", "34.74.7.41"]
-    if not os.path.exists(archive_path):
+    if not os.path.isfile(archive_path):
         return False
 
-    put_ver = put(local_path=archive_path, remote_path="/tmp/")
+    #put(archive_path, "/tmp/")
+    put_ver = put(archive_path, "/tmp")
     if pur_ver.failed:
         return False
     name_file = archive_path.split("/")[1].split(".")[0]
-    uncomp_ver = run("tar zxvf \
-                      /data/web_static/releases/{}".format(name_file))
+    with cd("/tmp/"):
+        run("mkdir /data/web_static/releases/{}".format(name_file))
+    uncomp_ver = run("tar zxvf /tmp/{}.tgz -C \
+                      /data/web_static/releases/{}".format(name_file, name_file))
     if uncomp_ver.failed:
         return False
-    rm_ver = run("rm /data/web_static/releases/{}".format(name_file))
+    rm_ver = run("rm /data/web_static/releases/{}.tgz".format(name_file))
+    rm_ver = run("rm /tmp/{}.tgz".format(name_file))
     if rm_ver.failed:
         return False
     rm_link_ver = run("rm /data/web_static/current")
@@ -43,3 +47,4 @@ def do_deploy(archive_path):
                     /data/web_static/current".format(name_file))
     if new_link.failed:
         return False
+    return True

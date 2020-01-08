@@ -32,7 +32,7 @@ def do_deploy(archive_path):
         return False
     name_file = archive_path.split("/")[1].split(".")[0]
     run("mkdir -p /data/web_static/releases/{}".format(name_file))
-    uncomp_ver = run("tar zxvf /tmp/{}.tgz -C \
+    uncomp_ver = run("tar -xzf /tmp/{}.tgz -C \
                       /data/web_static/releases/{}".format(
                      name_file, name_file))
     if uncomp_ver.failed:
@@ -41,10 +41,13 @@ def do_deploy(archive_path):
     rm_ver = run("rm /tmp/{}.tgz".format(name_file))
     if rm_ver.failed:
         return False
-    rm_link_ver = run("rm /data/web_static/current")
+    run("mv /data/web_static/releases/{}/web_static/* \
+        /data/web_static/releases/{}".format(name_file, name_file))
+    run("rm -rf /data/web_static/releases/{}/web_static".format(name_file))
+    rm_link_ver = run("rm -rf /data/web_static/current")
     if rm_link_ver.failed:
         return False
-    new_link = run("ln -snf /data/web_static/releases/{} \
+    new_link = run("ln -s /data/web_static/releases/{} \
                     /data/web_static/current".format(name_file))
     if new_link.failed:
         return False

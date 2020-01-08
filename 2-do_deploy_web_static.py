@@ -37,7 +37,6 @@ def do_deploy(archive_path):
                      name_file, name_file))
     if uncomp_ver.failed:
         return False
-    #rm_ver = run("rm /data/web_static/releases/{}.tgz".format(name_file))
     rm_ver = run("rm /tmp/{}.tgz".format(name_file))
     if rm_ver.failed:
         return False

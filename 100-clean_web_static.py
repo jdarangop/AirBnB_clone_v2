@@ -75,15 +75,18 @@ def deploy():
 def do_clean(number=0):
     """ Clean all unnecesary files created"""
 
-    if number == "0" or number == "1":
-        with lcd('versions'):
-            local("ls -1t | tail -n +2 | xargs -I {} rm -f -- {}")
-        with cd('/data/web_static/releases'):
-            run("ls -1t | grep 'web_static' | tail -n +2 \
-                | xargs -I {} rm -r -- {}")
-    elif number == "2":
-        with lcd('versions'):
-            local("ls -1t | tail -n +3 | xargs -I {} rm -f -- {}")
-        with cd('/data/web_static/releases'):
-            run("ls -1t | grep 'web_static' | tail -n +3 \
-                | xargs -I {} rm -rf -- {}")
+    numbers = [0, 1, 2]
+
+    if number in numbers:
+        if number == "0" or number == "1":
+            with lcd('versions'):
+                local("ls -1t | tail -n +2 | xargs -I {} rm -f -- {}")
+            with cd('/data/web_static/releases'):
+                run("ls -1t | grep 'web_static' | tail -n +2 \
+                    | xargs -I {} rm -r -- {}")
+        elif number == "2":
+            with lcd('versions'):
+                local("ls -1t | tail -n +3 | xargs -I {} rm -f -- {}")
+            with cd('/data/web_static/releases'):
+                run("ls -1t | grep 'web_static' | tail -n +3 \
+                    | xargs -I {} rm -rf -- {}")

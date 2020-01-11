@@ -81,9 +81,11 @@ def do_clean(number=0):
         with cd('/data/web_static/releases'):
             run("ls -1t | grep 'web_static' | tail -n +2 \
                 | xargs -I {} rm -r -- {}")
-    elif number == "2":
+    else:
         with lcd('versions'):
-            local("ls -1t | tail -n +3 | xargs -I {} rm -f -- {}")
+            local("ls -1t | tail -n +" + str(int(number) + 1) + " | \
+                  xargs -I {} rm -f -- {}")
         with cd('/data/web_static/releases'):
-            run("ls -1t | grep 'web_static' | tail -n +3 \
-                | xargs -I {} rm -rf -- {}")
+            run("ls -1t | grep 'web_static' | tail -n +" +
+                str(int(number) + 1) +
+                "| xargs -I {} rm -rf -- {}")

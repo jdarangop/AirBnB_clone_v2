@@ -21,7 +21,9 @@ def render_states():
         return: html with the list of states
     """
     list_states = storage.all(State)
-    return render_template('7-states_list.html', states=list_states.values())
+    return render_template('7-states_list.html',
+                           states=sorted(list_states.values(),
+                                         key=lambda i: i.name))
 
 
 if __name__ == '__main__':

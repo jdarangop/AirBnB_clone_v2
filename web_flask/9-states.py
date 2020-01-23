@@ -34,7 +34,6 @@ def states_id(id):
     list_states = storage.all(State)
     return render_template('9-states.html',
                            states=list_states, id=id)
-    
 
 
 if __name__ == '__main__':
